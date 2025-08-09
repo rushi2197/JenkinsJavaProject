@@ -1,12 +1,12 @@
 pipeline {
     agent any
 
-    properties([
-        parameters([
-            string(name: 'REPO_URL', defaultValue: 'https://github.com/rushi2197/myCodes_Practice.git', description: 'Git repository URL'),
-            string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch to checkout')
-        ])
-    ])
+    parameters {
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/rushi2197/myCodes_Practice.git', description: 'Git repository URL')
+        string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch to checkout')
+        string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'This path has basic java codes with main method')
+        string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code')
+    }
 
     stages {
         stage('Checkout Other Repo') {
@@ -15,9 +15,13 @@ pipeline {
                     url: "${params.REPO_URL}"
             }
         }
-        stage('List Files') {
+        stage('Execute Java Code') {
             steps {
-                sh 'ls -la'
+                sh """
+                    cd "$WORKSPACE/src"
+                    javac "${params.codePath}/${params.codeName}.java"
+                    java "${params.codePath.replace('/', '.')}.${params.codeName}"
+                """
             }
         }
     }
