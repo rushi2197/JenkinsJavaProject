@@ -18,9 +18,9 @@ pipeline {
         stage('Execute Java Code') {
             steps {
                 sh """
-                    cd "$WORKSPACE/src"
+                    cd "${WORKSPACE}/src"
                     javac "${params.codePath}/${params.codeName}.java"
-                    java "${params.codePath.replace('/', '.')}.${params.codeName}"
+                    java "${params.codePath.replace('/', '.')}.${params.codeName} 10"
                 """
             }
         }
