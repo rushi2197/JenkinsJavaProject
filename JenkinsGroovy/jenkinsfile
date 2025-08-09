@@ -1,19 +1,15 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Checkout Other Repo') {
             steps {
-                echo "Building..."
+                git branch: 'master',
+                    url: 'https://github.com/rushi2197/myCodes_Practice.git'
             }
         }
-        stage('Test') {
+        stage('List Files') {
             steps {
-                echo "Running tests..."
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "Deploying..."
+                sh 'ls -la'
             }
         }
     }
