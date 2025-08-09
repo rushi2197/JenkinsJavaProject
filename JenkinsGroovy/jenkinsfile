@@ -6,6 +6,7 @@ pipeline {
         string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch to checkout')
         string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'This path has basic java codes with main method')
         string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code')
+        string(name: 'NUMBER', defaultValue: '10', description: 'Number to calculate factorial for')
     }
 
     stages {
@@ -18,9 +19,9 @@ pipeline {
         stage('Execute Java Code') {
             steps {
                 sh """
-                    cd "${WORKSPACE}/src"
-                    javac "${params.codePath}/${params.codeName}.java"
-                    java "${params.codePath.replace('/', '.')}.${params.codeName} 10"
+                    cd "$WORKSPACE/src"
+                    javac ${codePath}/${codeName}.java
+                    java ${codePath.replaceAll('/', '.')}.$codeName ${params.NUMBER}
                 """
             }
         }
