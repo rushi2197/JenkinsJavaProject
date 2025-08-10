@@ -68,7 +68,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'JmeterProject/Results/*.csv, JmeterProject/Results/*.log', fingerprint: true
+            archiveArtifacts artifacts: '${WORKSPACE}/JmeterProject/Results/*.csv, ${WORKSPACE}/JmeterProject/Results/*.log', fingerprint: true
             cleanWs()
         }
     }
