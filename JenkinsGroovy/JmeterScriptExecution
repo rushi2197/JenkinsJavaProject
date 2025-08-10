@@ -8,7 +8,7 @@ pipeline {
         string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code name')
         string(name: 'NUMBER', defaultValue: '10', description: 'Number to pass to Java program')
         string(name: 'REPO_URL_Jmeter', defaultValue: 'https://github.com/rushi2197/JmeterProject.git', description: 'JMeter Git repository URL')
-        string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'master', description: 'Branch to checkout')
+        string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'main', description: 'Branch to checkout')
         string(name: 'JmeterScriptName', defaultValue: 'JmeterTest_DummyScript.jmx', description: 'JMeter test script to run')
     }
 
