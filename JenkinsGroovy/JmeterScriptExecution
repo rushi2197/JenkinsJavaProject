@@ -56,10 +56,10 @@ pipeline {
 
                     sh 'mkdir -p JmeterProject/Results'
                     sh """
-                        nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n \
+                        ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n \
                         -t ${WORKSPACE}/JmeterProject/Scripts/${params.JmeterScriptName} \
                         -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv \
-                        -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
+                        -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log
                     """
                 }
             }
