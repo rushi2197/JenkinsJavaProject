@@ -1,22 +1,21 @@
 pipeline {
     agent any
 
-parameters {
-    string(name: 'REPO_URL_Java', defaultValue: 'https://github.com/rushi2197/myCodes_Practice.git', description: 'Git repository URL')
-    string(name: 'BRANCH_NAME_Java', defaultValue: 'master', description: 'Branch to checkout')
-    string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'This path has basic java codes with main method')
-    string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code')
-    string(name: 'NUMBER', defaultValue: '10', description: 'Number to calculate factorial for')
-    string(name: 'REPO_URL_Jmeter', defaultValue: 'https://github.com/rushi2197/JmeterProject.git', description: 'Git repository URL')
-    string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'main', description: 'Branch to checkout')
-    string(name: 'JmeterScriptName', defaultValue: 'JmeterTest_DummyScript.jmx', description: 'DefaultScriptToRun')
-}
+    parameters {
+        string(name: 'REPO_URL_Java', defaultValue: 'https://github.com/rushi2197/myCodes_Practice.git', description: 'Git repository URL')
+        string(name: 'BRANCH_NAME_Java', defaultValue: 'master', description: 'Branch to checkout')
+        string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'This path has basic java codes with main method')
+        string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code')
+        string(name: 'NUMBER', defaultValue: '10', description: 'Number to calculate factorial for')
+        string(name: 'REPO_URL_Jmeter', defaultValue: 'https://github.com/rushi2197/JmeterProject.git', description: 'Git repository URL')
+        string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'main', description: 'Branch to checkout')
+        string(name: 'JmeterScriptName', defaultValue: 'JmeterTest_DummyScript.jmx', description: 'DefaultScriptToRun')
+    }
 
     stages {
         stage('Checkout Repos') {
             steps {
                 script {
-                    // Fix: Rename parameter 'dir' to 'directory' to avoid conflict with Jenkins dir step
                     def checkoutRepo = { repoUrl, branch, directory = '' ->
                         if (directory?.trim()) {
                             dir(directory) {
@@ -27,10 +26,7 @@ parameters {
                         }
                     }
 
-                    // Checkout Java repo under 'JavaProject' directory
                     checkoutRepo(params.REPO_URL_Java, params.BRANCH_NAME_Java, 'JavaProject')
-
-                    // Checkout JMeter repo under 'JmeterProject' directory
                     checkoutRepo(params.REPO_URL_Jmeter, params.BRANCH_NAME_Jmeter, 'JmeterProject')
                 }
             }
@@ -56,22 +52,24 @@ parameters {
                         """
                     }
 
-                    // Compile and run the Java code
                     compileAndRun(params.codePath, params.codeName, params.NUMBER)
 
-                    // Run JMeter test in background
                     sh 'mkdir -p JmeterProject/Results'
                     sh """
-                        nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n -t ${WORKSPACE}/JmeterProject/Scripts/${params.JmeterScriptName} -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
+                        nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n \
+                        -t ${WORKSPACE}/JmeterProject/Scripts/${params.JmeterScriptName} \
+                        -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv \
+                        -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
                     """
                 }
             }
         }
     }
+
     post {
         always {
             archiveArtifacts artifacts: 'JmeterProject/Results/*.csv, JmeterProject/Results/*.log', fingerprint: true
             cleanWs()
         }
-
+    }
 }
