@@ -4,22 +4,22 @@ pipeline {
     parameters {
         string(name: 'REPO_URL_Java', defaultValue: 'https://github.com/rushi2197/myCodes_Practice.git', description: 'Git repository URL')
         string(name: 'BRANCH_NAME_Java', defaultValue: 'master', description: 'Branch to checkout')
-        string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'Path with basic Java codes')
-        string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code name')
-        string(name: 'NUMBER', defaultValue: '10', description: 'Number to pass to Java program')
-        string(name: 'REPO_URL_Jmeter', defaultValue: 'https://github.com/rushi2197/JmeterProject.git', description: 'JMeter Git repository URL')
-        string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'main', description: 'Branch to checkout')
-        string(name: 'JmeterScriptName', defaultValue: 'JmeterTest_DummyScript.jmx', description: 'JMeter test script to run')
+        string(name: 'codePath', defaultValue: 'Aug_2025/BasicJavaCodes', description: 'This path has basic java codes with main method')
+        string(name: 'codeName', defaultValue: 'CheckIfPalindrome', description: 'Basic default code')
+        string(name: 'NUMBER', defaultValue: '10', description: 'Number to calculate factorial for')
+        string(name: 'REPO_URL_Jmeter', defaultValue: 'https://github.com/rushi2197/JmeterProject.git', description: 'Git repository URL')
+        string(name: 'BRANCH_NAME_Jmeter', defaultValue: 'master', description: 'Branch to checkout')
+        string(name: 'JmeterScriptName', defaultValue: 'JmeterTest_DummyScript.jmx', description: 'DefaultScriptToRun')
     }
 
     stages {
         stage('Checkout Repos') {
             steps {
                 script {
-                    // Define checkout function inline
-                    def checkoutRepo = { repoUrl, branch, dir = '' ->
-                        if (dir?.trim()) {
-                            dir(dir) {
+                    // Fix: Rename parameter 'dir' to 'directory' to avoid conflict with Jenkins dir step
+                    def checkoutRepo = { repoUrl, branch, directory = '' ->
+                        if (directory?.trim()) {
+                            dir(directory) {
                                 git branch: branch, url: repoUrl
                             }
                         } else {
@@ -27,10 +27,10 @@ pipeline {
                         }
                     }
 
-                    // Checkout Java repo at workspace root under 'JavaProject' folder
+                    // Checkout Java repo under 'JavaProject' directory
                     checkoutRepo(params.REPO_URL_Java, params.BRANCH_NAME_Java, 'JavaProject')
 
-                    // Checkout JMeter repo under 'JmeterProject' folder
+                    // Checkout JMeter repo under 'JmeterProject' directory
                     checkoutRepo(params.REPO_URL_Jmeter, params.BRANCH_NAME_Jmeter, 'JmeterProject')
                 }
             }
@@ -48,7 +48,6 @@ pipeline {
         stage('Run Java Code & JMeter') {
             steps {
                 script {
-                    // Define compileAndRun function inline
                     def compileAndRun = { codePath, codeName, number ->
                         sh """
                             cd ${WORKSPACE}/JavaProject/src
@@ -57,10 +56,10 @@ pipeline {
                         """
                     }
 
-                    // Run Java compile & execution
+                    // Compile and run the Java code
                     compileAndRun(params.codePath, params.codeName, params.NUMBER)
 
-                    // Run JMeter test in background (nohup)
+                    // Run JMeter test in background
                     sh """
                         nohup ${WORKSPACE}/apache-jmeter-5.5/bin/jmeter -n -t ${WORKSPACE}/JmeterProject/${params.JmeterScriptName} -l ${WORKSPACE}/Results/Testrun1.csv -j ${WORKSPACE}/Results/Testrun1.log &
                     """
