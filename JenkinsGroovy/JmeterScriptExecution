@@ -60,6 +60,7 @@ parameters {
                     compileAndRun(params.codePath, params.codeName, params.NUMBER)
 
                     // Run JMeter test in background
+                    sh 'mkdir -p JmeterProject/Results'
                     sh """
                         nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n -t ${WORKSPACE}/JmeterProject/Scripts/${params.JmeterScriptName} -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
                     """
@@ -69,12 +70,8 @@ parameters {
     }
     post {
         always {
-            // Archive artifacts first
-            archiveArtifacts artifacts: 'Results/*.csv, Results/*.log', fingerprint: true
-
-            // Then clean workspace
-            //cleanWs()
+            archiveArtifacts artifacts: 'JmeterProject/Results/*.csv, JmeterProject/Results/*.log', fingerprint: true
+            cleanWs()
         }
-    }
 
 }
