@@ -1,0 +1,7 @@
+def compileAndRun(String codePath, String codeName, String number) {
+    sh """
+        cd "$WORKSPACE/src"
+        javac ${codePath}/${codeName}.java
+        java ${codePath.replaceAll('/', '.')}.$codeName $number
+    """
+}

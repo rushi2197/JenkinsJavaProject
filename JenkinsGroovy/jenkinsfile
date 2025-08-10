@@ -1,3 +1,6 @@
+@Library('CheckoutGitCode-Library') _
+@Library('compileAndRun-library') _
+
 pipeline {
     agent any
 
@@ -10,19 +13,18 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Other Repo') {
+        stage('Checkout') {
             steps {
-                git branch: "${params.BRANCH_NAME}",
-                    url: "${params.REPO_URL}"
+                script {
+                    checkoutRepo(params.REPO_URL, params.BRANCH_NAME)
+                }
             }
         }
-        stage('Execute Java Code') {
+        stage('Run Code') {
             steps {
-                sh """
-                    cd "$WORKSPACE/src"
-                    javac ${codePath}/${codeName}.java
-                    java ${codePath.replaceAll('/', '.')}.$codeName ${params.NUMBER}
-                """
+                script {
+                    compileAndRun(params.codePath, params.codeName, params.NUMBER)
+                }
             }
         }
     }

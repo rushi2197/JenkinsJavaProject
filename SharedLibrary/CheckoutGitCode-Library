@@ -1,0 +1,9 @@
+def call(String repoUrl, String branch, String dir = '') {
+    if (dir?.trim()) {
+        dir(dir) {
+            git branch: branch, url: repoUrl
+        }
+    } else {
+        git branch: branch, url: repoUrl
+    }
+}
