@@ -71,8 +71,8 @@ pipeline {
             archiveArtifacts artifacts: 'JmeterProject/Results/*.jtl, JmeterProject/Results/*.log', fingerprint: true
             perfReport(
                         sourceDataFiles: 'JmeterProject/Results/*.jtl',
-                        errorFailedThreshold: '10',    // fail build if errors > 10%
-                        errorUnstableThreshold: '5'    // mark unstable if errors > 5%
+                        errorFailedThreshold: 10,    // fail build if errors > 10%
+                        errorUnstableThreshold: 5    // mark unstable if errors > 5%
                     )
             cleanWs()
         }
