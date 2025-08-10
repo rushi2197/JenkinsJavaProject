@@ -73,7 +73,7 @@ parameters {
             archiveArtifacts artifacts: 'Results/*.csv, Results/*.log', fingerprint: true
 
             // Then clean workspace
-            cleanWs()
+            //cleanWs()
         }
     }
 
