@@ -68,8 +68,13 @@ parameters {
         }
     }
     post {
-            always {
-                cleanWs()
-            }
+        always {
+            // Archive artifacts first
+            archiveArtifacts artifacts: 'Results/*.csv, Results/*.log', fingerprint: true
+
+            // Then clean workspace
+            cleanWs()
         }
+    }
+
 }
