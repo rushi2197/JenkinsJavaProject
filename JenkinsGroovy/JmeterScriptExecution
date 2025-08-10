@@ -69,13 +69,11 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'JmeterProject/Results/*.jtl, JmeterProject/Results/*.log', fingerprint: true
-            perfReport sourceDataFiles: '*.jtl',
-                                   failBuildOnThreshold: false,
-                                   failBuildOnError: true,
-                                   relativeFailedThresholdNegative: 0,
-                                   relativeFailedThresholdPositive: 0,
-                                   relativeUnstableThresholdNegative: 0,
-                                   relativeUnstableThresholdPositive: 0
+            perfReport(
+                        sourceDataFiles: 'JmeterProject/Results/*.jtl',
+                        errorFailedThreshold: '10',    // fail build if errors > 10%
+                        errorUnstableThreshold: '5'    // mark unstable if errors > 5%
+                    )
             cleanWs()
         }
     }
