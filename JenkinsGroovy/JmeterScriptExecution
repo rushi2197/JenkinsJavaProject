@@ -61,7 +61,7 @@ parameters {
 
                     // Run JMeter test in background
                     sh """
-                        nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n -t ${WORKSPACE}/JmeterProject/Scritps/${params.JmeterScriptName} -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
+                        nohup ${WORKSPACE}/JmeterProject/apache-jmeter-5.5/bin/jmeter -n -t ${WORKSPACE}/JmeterProject/Scripts/${params.JmeterScriptName} -l ${WORKSPACE}/JmeterProject/Results/Testrun1.csv -j ${WORKSPACE}/JmeterProject/Results/Testrun1.log &
                     """
                 }
             }
